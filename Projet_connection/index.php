@@ -118,10 +118,10 @@ if(isset($_POST['signUp'])){
         $data = [];
 
         try{
-            $req = $bdd->prepare('SELECT  u.nickname_user, u.password_user,  FROM users u  WHERE u.nickname_user = ? OR u.password_user = ?');
+            $req = $bdd->prepare('SELECT  u.nickname_user, u.password_user,  FROM users u  WHERE u.nickname_user = ? LIMIT 1'); // 
 
             $req->bindParam(1,$nicknameSignUp,PDO::PARAM_STR);
-            $req->bindParam(2,$passwordSignUp,PDO::PARAM_STR);
+            
 
             //Execute
             $req->execute();

@@ -262,7 +262,7 @@ class InfoController {
             echo $this->getCompte()->setMessage($this->getMessage())->renderCompte();
 
             //Lancement de l'affichage du footer
-            echo $this->getFooter()->setContent("<p>Bienvenue sur l'Accueil de Ma Todo</p>")->renderFooter();
+            echo $this->getFooter()->setContent("<p>Bienvenue sur l'Accueil de info</p>")->renderFooter();
 
         }
     
@@ -273,15 +273,7 @@ $compte = new InfoController();
 $compte->displayInfo();
 
 
-// include './View/header.php';
-// $header = new Header();
-// echo $header->setTitle($title)->setStyle($style)->renderHeader();
 
-// include './View/view_compte.php';
-
-// include './View/footer.php';
-// $footer = new Footer();
-// echo $footer->renderFooter();
 
 ?>
 

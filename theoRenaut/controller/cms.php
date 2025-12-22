@@ -112,57 +112,64 @@ try{
 
         $file_key = 'file_picture';
 
-        $title_picture = sanitize($_POST['title_picture'] ?? '');
+        
         $description_picture = sanitize($_POST['description_picture'] ?? '');
         $id_series = (int)($_POST['id_series'] ?? 0); 
 
-        if (empty($title_picture)){
-            $message_picture = "<h3 style='color:red;'> Le titre est obligatoire </h3>";
-        
-        } else if (empty($id_series)) { // Vérification de la clé étrangère
+        if (empty($id_series)){ // Vérification de la clé étrangère
             $message_picture = "<h3 style='color:red;'> L'identifiant de la série est manquant.</h3>";
-
+        
         } else if (!isset($_FILES[$file_key]) || $_FILES[$file_key]['error'] === UPLOAD_ERR_NO_FILE) {
             $message_picture = "<h3 style='color:red;'> Veuillez sélectionner une photo pour l'upload.</h3>";
         
-        } else if ($_FILES[$file_key]['error'] !== UPLOAD_ERR_OK) {
-            $message_picture = "<h3 style='color:red;'> Échec : Une erreur s'est produite lors du téléchargement (Code: " . $_FILES[$file_key]['error'] . ").</h3>";
+        } else {//Si tout est correct
+            $count_files = count($_FILES['file_picture']['name']);
 
-        } else {
-            $picture_data = $_FILES[$file_key];
             $uploadDir = '../uploads/';
-        
+
             if(!is_dir($uploadDir)){//Vérifie si le dossier uploads n'existe pas
                 mkdir($uploadDir, 0755, true);//Création du dossier
             }
-            
-            $filename = uniqid() . '_' . basename($picture_data['name']); //créer un identifiant avec uniqid() et on va chercher le nom de la photo grace a basename
-            $uploadPath = $uploadDir . $filename; //Donne le chemin d'accès
+            //Boucle pour parcourir toute les données des photos ajoutées
+            for ($i = 0; $i< $count_files; $i++){
 
-                if(move_uploaded_file($picture_data['tmp_name'], $uploadPath)){
+                if($_FILES['file_picture']['error'][$i] == UPLOAD_ERR_OK){
+                    // On récupère le nom original du fichier actuel
+                    $current_name = $_FILES['file_picture']['name'][$i];
+
+                    // On récupère l'emplacement temporaire du fichier actuel
+                    $current_tmp_path = $_FILES['file_picture']['tmp_name'][$i];
+            
+                    $filename = uniqid() . '_' . basename($current_name); //créer un identifiant avec uniqid() et on va chercher le nom de la photo grace a basename
+                    $uploadPath = $uploadDir . $filename; //Donne le chemin d'accès
+
+                    if(move_uploaded_file($current_tmp_path, $uploadPath)){
                 
-                // Hydratation de l'objet (Action du Contrôleur) 
-                    $picture->setTitlePicture($title_picture);
-                    $picture->setDescriptionPicture($description_picture);
-                    $picture->setUrlPicture($uploadPath);
-                    $picture->setIdSeries($id_series);
+                        // Hydratation de l'objet (Action du Contrôleur) 
+                        $picture->setTitlePicture($current_name);
+                        $picture->setDescriptionPicture($description_picture);
+                        $picture->setUrlPicture($uploadPath);
+                        $picture->setIdSeries($id_series);
                 
-                
-                if ($picture->addPicture()) {
-                        $message_picture = "<h3 style='color: green;'> SUCCÈS : La photo '{$title_picture}' a été ajoutée en BDD !</h3>";
-                } else {
-                    $message_picture = "<h3 style='color: red;'> ÉCHEC : L'insertion a échoué.</h3>";
+                        if ($picture->addPicture()) {
+                                $message_picture .= "<h3 style='color: green;'> SUCCÈS : La photo '{$current_name}' a été ajoutée en BDD !</h3>";
+                        } else {
+                            $message_picture = "<h3 style='color: red;'> ÉCHEC : L'insertion a échoué.</h3>";
+                        }
+
+                    } else {
+                        $message_picture = "<h3 style='color:red;'> Échec : Impossible de déplacer le fichier sur le serveur. Vérifiez les permissions du dossier 'uploads'.</h3>";
+                    }
+                }else {
+                    $message_picture = "<h3 style='color:red;'> Échec : Une erreur s'est produite lors du téléchargement (Code: " . $_FILES[$file_key]['error'] . ").</h3>"; 
                 }
-                
-                } else {
-                    $message_picture = "<h3 style='color:red;'> Échec : Impossible de déplacer le fichier sur le serveur. Vérifiez les permissions du dossier 'uploads'.</h3>";
-                }
+            }
         }
         echo $message_picture;
     }
 }catch (PDOException $e){
-if($e->getCode() == 23000){
-    $message_picture = "<h3 style='color:red;'> Échec : Vous avez déjà une photo portant ce nom. Veuillez choisir un nom unique.</h3>";
+    if($e->getCode() == 23000){
+        $message_picture = "<h3 style='color:red;'> Échec : Vous avez déjà une photo portant ce nom. Veuillez choisir un nom unique.</h3>";
     }
 }
 

@@ -52,14 +52,11 @@
             <?php endforeach; ?>
         </select>
         
-        <label for="title_picture">Titre de la photo :</label>
-        <input type="text" name="title_picture" id="title_picture" placeholder="Titre de la photo *" required>
-        
         <label for="description_picture">Description de la photo :</label>
         <input type="text" name="description_picture" id="description_picture" placeholder="Description de la photo" >
 
         <label for="file_picture">Fichier photo :</label>
-        <input type="file" name="file_picture" id="file_picture" required>
+        <input type="file"  name="file_picture[]" id="file_picture" multiple required>
         
         <input type="submit" name="submit_picture" value="Ajouter la photo">
         <p><?php echo  $message_picture ?></p>

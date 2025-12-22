@@ -42,7 +42,7 @@ public function setIdSeries(?int $id_series):self {$this->id_series = $id_series
 //Method pour insérer des photos dans la BDD
 
     public function addPicture ():bool{
-
+        
         $req = $this->bdd->prepare('INSERT INTO picture (title_picture, description_picture, url_picture, id_series) VALUES (?,?,?,?)');
 
         //Récupération des données via les Getters
@@ -57,7 +57,6 @@ public function setIdSeries(?int $id_series):self {$this->id_series = $id_series
         $req->bindParam(4,$id_series,PDO::PARAM_INT);
 
         return $req->execute();
-
         
     }
 
@@ -78,7 +77,7 @@ public function setIdSeries(?int $id_series):self {$this->id_series = $id_series
 
     public function deletePicture(int $id_picture):bool{
         $req = $this->bdd->prepare('DELETE FROM picture WHERE id_picture = :id_picture');
-        
+
         //Requête pour récupérer l'url dans la bdd pour ensuite supprimer le fichier dans le dossier upload
         $select_req = $this->bdd->prepare('SELECT url_picture, id_series FROM picture WHERE id_picture = :id_picture');
 

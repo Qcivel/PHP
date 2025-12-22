@@ -8,6 +8,7 @@ const nextBtn = document.getElementById("nextBtn");
 let slides = document.getElementsByClassName("slide");
 
 let slideIndex = 0;
+let saveIndex  = 0 ;
 console.log("test2");
 
 //Envoie de la requete HTTP
@@ -34,6 +35,7 @@ async function recoverPicture(){
     data.forEach(picture=> {
         const div = document.createElement("div");
         const img = document.createElement("img");
+        
 
         //Affichage des noms des séries
         uniqueSeriesMap[picture.id_series] = picture.title_series;
@@ -53,9 +55,7 @@ async function recoverPicture(){
     //Création des checkbox
     seriesForFilter.forEach(([seriesId, seriesTitle]) => {
         //Création des éléments
-        const label = document.createElement("label");
-        
-        const seriesText = document.createTextNode(seriesTitle);
+        const label = document.createElement("label");        
         const btn = document.createElement("button");
 
        //label
@@ -68,7 +68,7 @@ async function recoverPicture(){
         btn.classList.add("filter-btn");
         filtreContainer.appendChild(btn);
         
-        //Ecouteur d'événement sur les bouttons
+        //Ecouteur d'événement sur les bouttons des séries
         btn.addEventListener("click",function(){
             const allFilterButtons = document.querySelectorAll(".filter-btn");
             allFilterButtons.forEach(button => button.classList.remove("active-filter"));
@@ -76,13 +76,16 @@ async function recoverPicture(){
             //  Ajoute la classe active-filter au bouton cliqué
             this.classList.add("active-filter");
             seriesActives = [seriesId];
-                
+            
             slideIndex = 0;
+            
             filterPictures();
             updateCarousel();
         });
     });
+    filterPictures();
     updateCarousel();
+    
 
     function filterPictures(){
         const allPictureContainers = document.querySelectorAll(".galerie div");
@@ -102,7 +105,9 @@ async function recoverPicture(){
 
     prevBtn.addEventListener("click", function(){
         console.log("Prev");
-         slideIndex--;
+        slideIndex--;
+        saveIndex=slideIndex;
+        console.log(saveIndex);
         updateCarousel()
         
     });
@@ -110,7 +115,8 @@ async function recoverPicture(){
     nextBtn.addEventListener("click", function(){
         console.log("Next");
         slideIndex++;
-
+        saveIndex=slideIndex;
+        console.log(saveIndex);
         updateCarousel();
         
     });
@@ -120,10 +126,8 @@ recoverPicture();
 function updateCarousel(){
     const slideArray =  Array.from(slides);
     const visibleSlide = slideArray.filter(slide=>slide.classList.contains("filterable"));
+    const counterDisplay = document.getElementById("counter");
 
-    slideArray.forEach(classActive=> {
-        classActive.classList.remove("active");
-    });
     //Condition pour revenir a la fin du carrousel
     if(slideIndex < 0){
         slideIndex = visibleSlide.length - 1;
@@ -132,6 +136,21 @@ function updateCarousel(){
     if(slideIndex > visibleSlide.length - 1 ){
         slideIndex = 0;
     }
+
+    if(slideIndex >= visibleSlide.length && visibleSlide.length > 0){
+        slideIndex = 0; // Revenir au début si l'index est trop grand
+    }
+
+    if (visibleSlide.length > 0 ){
+        counterDisplay.textContent=`${slideIndex +1  } / ${visibleSlide.length}`;
+    }else {
+        counterDisplay.textContent="0/0";
+    }
+
+    slideArray.forEach(classActive=> {
+        classActive.classList.remove("active");
+    });
+
     if(visibleSlide.length > 0){
         visibleSlide[slideIndex].classList.add("active");
     }

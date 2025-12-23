@@ -11,7 +11,7 @@
 }
 
 body {
-    font-family: 'Bona Nova', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: linear-gradient(rgba(229, 229, 229, 1) 0%,
                                 rgba(131, 124, 119, 1) 90%,
                                 rgba(181, 166, 166, 1) 100%
@@ -55,6 +55,7 @@ body {
     margin-left: 70px;
     text-decoration: none;
     color: black;
+    font-family: 'Bona Nova', serif;
 }
 
 .navbar ul {
@@ -116,6 +117,7 @@ summary {
     font-size: 1rem;
     letter-spacing: 1px;
     text-decoration: none;
+    font-family: 'Bona Nova', serif;
 }
 
 .imgBurgerMenu{
@@ -135,6 +137,11 @@ summary {
 h1{
     text-align: center;
     margin: 15px;
+    font-family: 'Bona Nova', serif;
+}
+
+h2{
+    font-family: 'Bona Nova', serif;
 }
 
 /* ******************FOOTER************* */

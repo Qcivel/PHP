@@ -25,6 +25,5 @@
         <div class="logo"><a href="/theoRenaut/index.php">Théo Renaut</a></div>
         <ul class="contact">
             <li><a href="/theoRenaut/controller/login.php"><img src="/theoRenaut/public/image/contact.png" alt="contact"></a></li>
-            <li><a href="#"><img src="/theoRenaut/public/image/shopping-bag.png" alt="shop"></a></li>
         </ul>
     </nav>
